@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Model weights (download them, see README.md)
+ckpts/
+*.safetensors
+*.bin
+*.pth
+*.ckpt
+
+# Optional local VGGT checkout
+vggt/
+
+# Outputs
+outputs*/
+*.exr
+*.ply
+*.npy
+
+# Misc
+.DS_Store
+.vscode/
+.idea/
+wandb/
