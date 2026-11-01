@@ -11,21 +11,17 @@
 <p align="center">
   <a href=""><img src="https://img.shields.io/badge/Paper-arXiv-b31b1b.svg" alt="Paper"></a>
   <a href=""><img src="https://img.shields.io/badge/Project-Page-blue?style=flat&logo=googlechrome&logoColor=white" alt="Project Page"></a>
-  <a href="https://huggingface.co/BackRabb1t/lumen"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Model-Weights-yellow" alt="Model Weights"></a>
-  <a href=""><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-Data-orange" alt="Dataset"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-929292" alt="License"></a>
+  <a href="https://huggingface.co/datasets/BackRabb1t/LUMEN_dataset"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-LUMEN-orange" alt="Dataset"></a>
 </p>
 
 <p align="center">
   <a href="">Paper</a> |
   <a href="">Project Page</a> |
-  <a href="https://huggingface.co/BackRabb1t/lumen">Model Weights</a> |
-  <a href="">Dataset</a>
+  <a href="https://huggingface.co/datasets/BackRabb1t/LUMEN_dataset">Dataset</a>
 </p>
 
 LUMEN estimates **spatially-varying HDR environment maps** from ordinary photos. Given one or more RGB images, it builds a
-partial equirectangular observation of the scene and lets a FLUX-based diffusion model (fine-tuned with LoRA)
-complete the full 360° panorama, which is then converted to an HDR `.exr` environment map.
+partial equirectangular observation of the scene and lets a diffusion model complete the full 360° panorama, which is then converted to an HDR environment map.
 
 <p align="center">
   <img src="assets/teaser.jpg" width="100%" alt="LUMEN teaser">
@@ -163,9 +159,7 @@ python inference_vggt.py --image_dir path/to/views --output_path outputs/vggt --
 python inference_vggt.py --image_path view0.jpg view1.jpg view2.jpg --output_path outputs/vggt --seed 42
 ```
 
-Only the images are used as input: camera poses and intrinsics are estimated by VGGT. The
-`transform.json` in `examples/multi_view` stores the ground-truth cameras of the rendered example for reference
-and is not read by the script.
+Only the images are used as input: camera poses and intrinsics are estimated by VGGT. 
 
 **Coordinate system.** All positions are expressed in the frame of the reference (first) camera:
 x points right, y points up and the camera looks along −z. Units follow VGGT's depth scale.
