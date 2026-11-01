@@ -10,8 +10,6 @@ ckpts/
 *.pth
 *.ckpt
 
-# Optional local VGGT checkout
-vggt/
 
 # Outputs
 outputs*/

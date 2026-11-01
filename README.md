@@ -1,20 +1,29 @@
-<h1 align="center">Lumen: TODO-FULL-PAPER-TITLE</h1>
+<h1 align="center">LUMEN: Geometry-Guided Diffusion Model for Spatially-Varying HDR Illumination Estimation</h1>
 
 <p align="center">
-  <b>SIGGRAPH Asia 2026</b>
+  <b>ACM SIGGRAPH Asia 2026</b>
 </p>
 
 <p align="center">
-  TODO: Author 1, Author 2, ..., Author N
+  Hongze Chen, Fangyu Lin, Runze Zhang, Lingting Zhu, Weikai Chen, Zeyu Hu, Yingda Yin, Keyang Luo, Xin Wang, Zehong Lin, Jun Zhang
 </p>
 
 <p align="center">
-  <a href="TODO-PROJECT-PAGE"><img src="https://img.shields.io/badge/Project-Website-blue?style=flat&logo=googlechrome&logoColor=white" alt="Project Page"></a>
-  <a href="TODO-ARXIV"><img src="https://img.shields.io/badge/arXiv-TODO-b31b1b.svg" alt="arXiv"></a>
-  <a href="https://huggingface.co/BackRabb1t/lumen"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Weights-yellow" alt="Weights"></a>
+  <a href=""><img src="https://img.shields.io/badge/Paper-arXiv-b31b1b.svg" alt="Paper"></a>
+  <a href=""><img src="https://img.shields.io/badge/Project-Page-blue?style=flat&logo=googlechrome&logoColor=white" alt="Project Page"></a>
+  <a href="https://huggingface.co/BackRabb1t/lumen"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Model-Weights-yellow" alt="Model Weights"></a>
+  <a href=""><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-Data-orange" alt="Dataset"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-929292" alt="License"></a>
 </p>
 
-Lumen estimates **HDR environment maps** from ordinary photos. Given one or more RGB images, it builds a
+<p align="center">
+  <a href="">Paper</a> |
+  <a href="">Project Page</a> |
+  <a href="https://huggingface.co/BackRabb1t/lumen">Model Weights</a> |
+  <a href="">Dataset</a>
+</p>
+
+LUMEN estimates **spatially-varying HDR environment maps** from ordinary photos. Given one or more RGB images, it builds a
 partial equirectangular observation of the scene and lets a FLUX-based diffusion model (fine-tuned with LoRA)
 complete the full 360° panorama, which is then converted to an HDR `.exr` environment map.
 
@@ -28,6 +37,7 @@ complete the full 360° panorama, which is then converted to an HDR `.exr` envir
   - [Multi-view / spatially-varying lighting](#2-multi-view--spatially-varying-lighting-inference_vggtpy)
 - [Citation](#citation)
 - [Acknowledgements](#acknowledgements)
+- [License](#license)
 
 ## Installation
 
@@ -35,8 +45,11 @@ The code requires an NVIDIA GPU with bfloat16 support (Ampere or newer). FLUX.1-
 so a GPU with large memory (≥ 40 GB recommended) is needed.
 
 ```bash
-git clone https://github.com/TODO-USER/lumen.git
+# --recursive also fetches VGGT (git submodule in ./vggt)
+git clone --recursive https://github.com/<user>/lumen.git
 cd lumen
+# if you cloned without --recursive:
+# git submodule update --init --recursive
 
 conda create -n lumen python=3.11 -y
 conda activate lumen
@@ -47,12 +60,12 @@ pip install torch==2.7.0 torchvision==0.22.0 --index-url https://download.pytorc
 # 2. Python dependencies
 pip install -r requirements.txt
 
-# 3. VGGT (camera / depth estimation)
-pip install "git+https://github.com/facebookresearch/vggt.git@44b3afbd1869d8bde4894dd8ea1e293112dd5eba"
-
-# 4. PyTorch3D (point-cloud panorama rendering, only needed by inference_vggt.py)
+# 3. PyTorch3D (point-cloud panorama rendering, only needed by inference_vggt.py)
 pip install "git+https://github.com/facebookresearch/pytorch3d.git" --no-build-isolation
 ```
+
+[VGGT](https://github.com/facebookresearch/vggt) is included as a git submodule in `vggt/` and is imported
+directly from there, so it does not need to be pip-installed.
 
 ## Model Weights
 
@@ -183,10 +196,10 @@ operator `H = L / (1 − L)` and saved as a 32-bit float `.exr`.
 If you find this work useful, please cite:
 
 ```bibtex
-@inproceedings{TODO2026lumen,
-  title     = {Lumen: TODO-FULL-PAPER-TITLE},
-  author    = {TODO},
-  booktitle = {SIGGRAPH Asia 2026 Conference Papers},
+@inproceedings{lumen2026,
+  title     = {LUMEN: Geometry-Guided Diffusion Model for Spatially-Varying HDR Illumination Estimation},
+  author    = {Hongze Chen and Fangyu Lin and Runze Zhang and Lingting Zhu and Weikai Chen and Zeyu Hu and Yingda Yin and Keyang Luo and Xin Wang and Zehong Lin and Jun Zhang},
+  booktitle = {ACM SIGGRAPH Asia 2026 Conference Papers},
   year      = {2026}
 }
 ```
@@ -205,5 +218,11 @@ Example images in `examples/` are from [Unsplash](https://unsplash.com).
 
 ## License
 
-TODO. Note that the FLUX.1-dev and FLUX.1-Redux-dev weights are released under the
-[FLUX.1 [dev] Non-Commercial License](https://huggingface.co/black-forest-labs/FLUX.1-dev/blob/main/LICENSE.md).
+The code in this repository is released under the [Apache License 2.0](LICENSE).
+`external/equilib` is from [equilib](https://github.com/haruishi43/equilib) (Apache-2.0, see `external/equilib/LICENSE`).
+
+Third-party models and code are subject to their own licenses:
+[FLUX.1-dev / FLUX.1-Redux-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev/blob/main/LICENSE.md) (FLUX.1 [dev] Non-Commercial License),
+[VGGT](https://github.com/facebookresearch/vggt/blob/main/LICENSE.txt) (VGGT License),
+and [PyTorch3D](https://github.com/facebookresearch/pytorch3d/blob/main/LICENSE) (BSD-3-Clause).
+Since the Lumen LoRA is fine-tuned from FLUX.1-dev, its use is also subject to the FLUX.1 [dev] Non-Commercial License.
