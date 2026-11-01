@@ -184,7 +184,6 @@ Main arguments:
 | `--envmap_position1` / `--envmap_position2` | `-0.3 0 -0.5` / `0.3 0 -0.5` | start / end probe position |
 | `--num_positions` | `12` | number of probes between the two positions |
 | `--envmap_rotation` | `-90 0 0` | panorama rotation (degrees) |
-| `--redux_mode` | `first` | image condition from the reference view (`first`) or the mean over all views (`mean`) |
 | `--point_radius` / `--points_per_pixel` | `0.01` / `10` | point rasterization settings |
 | `--width` / `--height` | `1024` / `512` | panorama resolution |
 | `--seed` | `None` | random seed (fix it for consistent results across probes) |

@@ -175,26 +175,6 @@ def create_batch_data_from_views(
     return batch_data
 
 
-def get_redux_embeddings(pipe_prior_redux, images, mode='first', ref_index=0):
-    """
-    用 FLUX-Redux 编码输入图片。fluxpaint_single 的去噪 batch size 由 prompt_embeds.shape[0] 决定，
-    因此多视图时需要把 N 份 embedding 合并为 1 份。
-
-    mode:
-        'first': 只用 ref_index 指定的视图
-        'mean' : 对所有视图的 embedding 取平均
-    """
-    if mode == 'first' or len(images) == 1:
-        out = pipe_prior_redux([images[ref_index]])
-        return out["prompt_embeds"], out["pooled_prompt_embeds"]
-    if mode == 'mean':
-        out = pipe_prior_redux(images)
-        prompt_embeds = out["prompt_embeds"].mean(dim=0, keepdim=True)
-        pooled_prompt_embeds = out["pooled_prompt_embeds"].mean(dim=0, keepdim=True)
-        return prompt_embeds, pooled_prompt_embeds
-    raise ValueError(f"Unknown redux mode: {mode}")
-
-
 def main(args):
     """
     主推理函数 - 从单张或多张图片生成 panorama
@@ -282,11 +262,13 @@ def main(args):
     pipe = pipe.to(device)
     pipe_prior_redux.to(device)
 
-    # Redux 条件只与输入图片有关，与 envmap 位置无关，循环外计算一次
+    # Redux 条件只与输入图片有关，与 envmap 位置无关，循环外计算一次。
+    # FluxPriorReduxPipeline 对 N 张输入图分别编码后在 batch 维求和，输出 (1, L, 4096)，与训练时一致。
     redux_images = [Image.open(p).convert("RGB") for p in image_paths]
-    prompt_embeds, pooled_prompt_embeds = get_redux_embeddings(
-        pipe_prior_redux, redux_images, mode=args.redux_mode, ref_index=0
-    )
+    with torch.no_grad():
+        pipe_prior_output = pipe_prior_redux(redux_images)
+    prompt_embeds = pipe_prior_output["prompt_embeds"]
+    pooled_prompt_embeds = pipe_prior_output["pooled_prompt_embeds"]
 
     # 6. 保存中间结果
     print(f"\n{'='*60}")
@@ -427,8 +409,6 @@ if __name__ == "__main__":
     parser.add_argument("--lora_path", type=str,
                         default=os.path.join(LUMEN_ROOT, 'ckpts/lumen'),
                         help="Path to trained LoRA directory (containing pytorch_lora_weights.safetensors)")
-    parser.add_argument("--redux_mode", type=str, default='first', choices=['first', 'mean'],
-                        help="How to build Redux condition from multiple views: 'first' (reference view only) or 'mean' (average over views)")
     
     # Envmap position
     parser.add_argument("--envmap_position1", type=float, nargs=3, default=[-0.3, 0.0, -0.5],
