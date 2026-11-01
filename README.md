@@ -27,7 +27,9 @@ LUMEN estimates **spatially-varying HDR environment maps** from ordinary photos.
 partial equirectangular observation of the scene and lets a FLUX-based diffusion model (fine-tuned with LoRA)
 complete the full 360° panorama, which is then converted to an HDR `.exr` environment map.
 
-<!-- TODO: add teaser figure, e.g. ![teaser](assets/teaser.jpg) -->
+<p align="center">
+  <img src="assets/teaser.jpg" width="100%" alt="LUMEN teaser">
+</p>
 
 ## Table of Contents
 - [Installation](#installation)
@@ -46,7 +48,7 @@ so a GPU with large memory (≥ 40 GB recommended) is needed.
 
 ```bash
 # --recursive also fetches VGGT (git submodule in ./vggt)
-git clone --recursive https://github.com/<user>/lumen.git
+git clone --recursive https://github.com/stopaimme/lumen.git
 cd lumen
 # if you cloned without --recursive:
 # git submodule update --init --recursive
@@ -116,6 +118,8 @@ Other locations can be used via `--flux_path` and `--lora_path`.
 Projects each input photo onto an equirectangular canvas (assuming a 60° horizontal field of view) and
 completes the full panorama. Every image in `--scene_path` is processed independently.
 
+We provide example photos in `examples/single`:
+
 ```bash
 python inference_single.py --scene_path examples/single --output_path outputs/single
 ```
@@ -143,13 +147,25 @@ Takes one or more views of the same scene, jointly estimates depth, intrinsics a
 fuses all views into a single point cloud, renders a partial panorama at each requested probe position,
 and completes an HDR environment map for every position.
 
-```bash
-# one or more images (the first one is the reference view)
-python inference_vggt.py --image_path view0.jpg view1.jpg view2.jpg --output_path outputs/vggt --seed 42
+We provide a multi-view example (12 views) in `examples/multi_view`:
 
-# or all images in a directory (sorted by filename)
-python inference_vggt.py --image_dir path/to/views --output_path outputs/vggt --seed 42
+```bash
+python inference_vggt.py --image_dir examples/multi_view --output_path outputs/multi_view --seed 42
 ```
+
+On your own data, pass a directory of images (sorted by filename) or an explicit list of images:
+
+```bash
+# all images in a directory
+python inference_vggt.py --image_dir path/to/views --output_path outputs/vggt --seed 42
+
+# an explicit list (the first one is the reference view)
+python inference_vggt.py --image_path view0.jpg view1.jpg view2.jpg --output_path outputs/vggt --seed 42
+```
+
+Only the images are used as input: camera poses and intrinsics are estimated by VGGT. The
+`transform.json` in `examples/multi_view` stores the ground-truth cameras of the rendered example for reference
+and is not read by the script.
 
 **Coordinate system.** All positions are expressed in the frame of the reference (first) camera:
 x points right, y points up and the camera looks along −z. Units follow VGGT's depth scale.
@@ -214,7 +230,7 @@ This project builds on
 [equilib](https://github.com/haruishi43/equilib) (vendored in `external/equilib`).
 We thank the authors for releasing their code and models.
 
-Example images in `examples/` are from [Unsplash](https://unsplash.com).
+Example photos in `examples/single` are from [Unsplash](https://unsplash.com).
 
 ## License
 
