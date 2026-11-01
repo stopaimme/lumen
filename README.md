@@ -9,13 +9,13 @@
 </p>
 
 <p align="center">
-  <a href=""><img src="https://img.shields.io/badge/Paper-arXiv-b31b1b.svg" alt="Paper"></a>
+  <a href="assets/Lumen.pdf"><img src="https://img.shields.io/badge/Paper-PDF-b31b1b.svg" alt="Paper"></a>
   <a href="https://stopaimme.github.io/lumen/"><img src="https://img.shields.io/badge/Project-Page-blue?style=flat&logo=googlechrome&logoColor=white" alt="Project Page"></a>
   <a href="https://huggingface.co/datasets/BackRabb1t/LUMEN_dataset"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-LUMEN-orange" alt="Dataset"></a>
 </p>
 
 <p align="center">
-  <a href="">Paper</a> |
+  <a href="assets/Lumen.pdf">Paper</a> |
   <a href="https://stopaimme.github.io/lumen/">Project Page</a> |
   <a href="https://huggingface.co/datasets/BackRabb1t/LUMEN_dataset">Dataset</a>
 </p>

@@ -26,3 +26,4 @@ wandb/
 # Raw assets kept locally (web versions live in docs/static)
 assets/real_world_demo_video/
 assets/*.pdf
+!assets/Lumen.pdf
