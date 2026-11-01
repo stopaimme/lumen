@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LUMEN: Geometry-Guided Diffusion Model for Spatially-Varying HDR Illumination Estimation</title>
+  <meta name="description" content="LUMEN is a geometry-conditioned diffusion framework that synthesizes HDR environment maps at arbitrary locations from single or multi-view images. SIGGRAPH Asia 2026.">
+  <meta property="og:title" content="LUMEN: Geometry-Guided Diffusion Model for Spatially-Varying HDR Illumination Estimation">
+  <meta property="og:description" content="Spatially-varying HDR illumination estimation from single or multi-view images. SIGGRAPH Asia 2026.">
+  <meta property="og:image" content="static/images/teaser.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<!-- ============================ Header ============================ -->
+<header class="hero">
+  <div class="container">
+    <div class="venue">SIGGRAPH Asia 2026</div>
+    <h1 class="title"><span class="brand">LUMEN</span>: Geometry-Guided Diffusion Model<br class="hide-sm"> for Spatially-Varying HDR Illumination Estimation</h1>
+
+    <div class="authors">
+      <span>Hongze Chen<sup>1</sup></span>
+      <span>Fangyu Lin<sup>1</sup></span>
+      <span>Runze Zhang<sup>2</sup></span>
+      <span>Lingting Zhu<sup>2</sup></span>
+      <span>Keyang Luo<sup>2</sup></span>
+      <span>Yingda Yin<sup>2</sup></span>
+      <span>Zeyu Hu<sup>2</sup></span>
+      <span>Weikai Chen<sup>2</sup></span>
+      <span>Xin Wang<sup>2</sup></span>
+      <span>Zehong Lin<sup>3</sup></span>
+      <span>Jun Zhang<sup>1,*</sup></span>
+    </div>
+    <div class="affiliations">
+      <span><sup>1</sup>The Hong Kong University of Science and Technology</span>
+      <span><sup>2</sup>LIGHTSPEED</span>
+      <span><sup>3</sup>Lingnan University</span>
+    </div>
+    <div class="note"><sup>*</sup>Corresponding author</div>
+
+    <div class="links">
+      <!-- TODO: fill in the paper link -->
+      <a class="btn" href="" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM8 12h8v1.6H8V12zm0 3.4h8V17H8v-1.6zM8 8.6h4v1.6H8V8.6z"/></svg>
+        <span>Paper</span>
+      </a>
+      <a class="btn" href="https://github.com/stopaimme/lumen" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
+        <span>Code</span>
+      </a>
+      <a class="btn" href="https://huggingface.co/datasets/BackRabb1t/LUMEN_dataset" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C7.03 2 3 3.79 3 6v12c0 2.21 4.03 4 9 4s9-1.79 9-4V6c0-2.21-4.03-4-9-4zm0 2c4.42 0 7 1.5 7 2s-2.58 2-7 2-7-1.5-7-2 2.58-2 7-2zm7 14c0 .5-2.58 2-7 2s-7-1.5-7-2v-2.23c1.61.78 4.15 1.23 7 1.23s5.39-.45 7-1.23V18zm0-4.5c0 .5-2.58 2-7 2s-7-1.5-7-2v-2.23c1.61.78 4.15 1.23 7 1.23s5.39-.45 7-1.23v2.23zM19 9c0 .5-2.58 2-7 2S5 9.5 5 9V8.27C6.61 9.05 9.15 9.5 12 9.5s5.39-.45 7-1.23V9z"/></svg>
+        <span>Dataset</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================ Teaser ============================ -->
+<section class="section teaser">
+  <div class="container">
+    <figure>
+      <img class="zoomable" src="static/images/teaser.jpg" alt="LUMEN teaser: multi-view input images, object insertion and predicted environment maps">
+      <figcaption>
+        Given a set of multi-view images, <b>LUMEN</b> estimates spatially-varying illumination at any location with
+        consistency and achieves seamless virtual object insertion (the balls and the bunny are rendered using the
+        predicted HDR environment maps at their positions).
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================ Abstract ============================ -->
+<section class="section" id="abstract">
+  <div class="container narrow">
+    <h2>Abstract</h2>
+    <p class="abstract">
+      Estimating scene illumination from images is challenging as lighting is inherently spatially varying,
+      depending on geometry, occlusion, and light sources. Existing methods incorporate geometric cues by deriving
+      local environment maps or probe-based representations, but largely rely on regression or parametric models,
+      resulting in over-smoothed lighting and limited realism. We revisit spatially-varying illumination estimation
+      from a generative perspective and introduce <b>LUMEN</b>, a geometry-conditioned diffusion framework for
+      synthesizing high-dynamic-range (HDR) environment maps at arbitrary spatial locations from single or
+      multi-view images. Specifically, we reconstruct a coarse 3D scene from input images and render partial
+      environment maps at arbitrary locations to encode visibility and spatial structure. These signals are fused
+      with multi-view image features and fed into a diffusion transformer to generate full HDR environment maps.
+      To train the model, we build a synthetic dataset of 700 indoor scenes with dense spatial supervision,
+      including multi-view RGB images, depth, and HDR illumination at multiple sampled locations. This dataset
+      enables the model to learn spatially consistent lighting distributions across diverse scenes. Extensive
+      experiments demonstrate that LUMEN significantly improves visual fidelity and spatial coherence compared to
+      prior approaches.
+    </p>
+  </div>
+</section>
+
+<!-- ============================ Method ============================ -->
+<section class="section alt" id="method">
+  <div class="container">
+    <h2>Method</h2>
+    <figure>
+      <img class="zoomable" src="static/images/pipeline.jpg" alt="LUMEN pipeline overview">
+      <figcaption>
+        <b>Overview of LUMEN.</b> Given a single-view image or multi-view inputs, we first estimate the camera
+        parameters and reconstruct a coarse point cloud using an off-the-shelf feed-forward 3D reconstruction model
+        (VGGT). We then render partial environment maps at arbitrary locations in the scene based on the reconstructed
+        geometry, and condition a 2D diffusion model on the input views with these partial environment maps to
+        generate a complete HDR environment map.
+      </figcaption>
+    </figure>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">01</div>
+        <h3>Lighting as geometry-guided completion</h3>
+        <p>
+          For each query location, the reconstructed point cloud is rendered into a panorama centered at that location.
+          This <i>partial environment map</i> captures visibility and occlusion, and serves as an explicit spatial
+          condition: moving the query point changes the condition and thus the generated illumination.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-num">02</div>
+        <h3>Multi-view conditioned diffusion transformer</h3>
+        <p>
+          Built on FLUX.1-dev and fine-tuned with LoRA. Input views are encoded with SigLIP, the partial environment map
+          with the VAE; both are concatenated with the noisy latent into a unified token sequence with a
+          <i>view-aware RoPE index</i>. HDR is recovered by inverse Reinhard tone mapping.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-num">03</div>
+        <h3>Dense spatially-varying supervision</h3>
+        <p>
+          A synthetic dataset of ~700 indoor scenes built on Infinigen Indoors, with multi-view RGB images, depth,
+          cameras and HDR light probes at many locations, combined with 1,527 real-world HDR panoramas for robustness
+          in the wild.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ Spatially-varying ============================ -->
+<section class="section" id="spatially-varying">
+  <div class="container">
+    <h2>Spatially-Varying Lighting Estimation</h2>
+
+    <h3 class="sub">Real-world demo</h3>
+    <p class="lead">
+      A virtual light probe is placed directly in front of the camera. As the camera moves through the real scene,
+      LUMEN predicts the HDR environment map at the probe's current location, and the probe is rendered with it,
+      so its reflection follows the changes of the surrounding illumination.
+    </p>
+    <div class="video-grid">
+      <video src="static/videos/real_world_1.mp4" poster="static/videos/real_world_1_poster.jpg"
+             autoplay muted loop playsinline controls preload="metadata"></video>
+      <video src="static/videos/real_world_2.mp4" poster="static/videos/real_world_2_poster.jpg"
+             autoplay muted loop playsinline controls preload="metadata"></video>
+    </div>
+
+    <h3 class="sub">In-the-wild scenes</h3>
+    <figure>
+      <img class="zoomable" src="static/images/lumen_real_world.jpg" alt="Spatially-varying illumination on in-the-wild scenes">
+      <figcaption>
+        Visualization of the estimated spatially-varying illumination on in-the-wild scenes. The inserted spheres in each
+        photo correspond one-to-one to the renderings on its right: spheres ordered from left to right match the rows
+        from top to bottom (diffuse, matte silver and mirror materials).
+      </figcaption>
+    </figure>
+
+    <h3 class="sub">Comparison from a single-view image</h3>
+    <figure>
+      <img class="zoomable" src="static/images/sv1.jpg" alt="Qualitative comparison of spatially-varying lighting estimation from a single-view image">
+      <figcaption>
+        Qualitative comparison of spatially-varying lighting estimation from a single-view image. Each pair of rows
+        corresponds to the two probe locations marked in the input image. LUMEN localizes light sources accurately and
+        produces illumination that changes coherently with the probe location.
+      </figcaption>
+    </figure>
+
+    <div class="table-block">
+      <div class="table-title">Quantitative comparison for spatially-varying lighting estimation</div>
+      <div class="table-wrap"><table class="metrics" id="table-sv"></table></div>
+      <div class="table-note">Lower is better for RMSE, si-RMSE and angular error; higher is better for SSIM. Best results per setting in bold.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ Single image -> HDRI ============================ -->
+<section class="section alt" id="single-image">
+  <div class="container">
+    <h2>HDR Environment Map from a Single Image</h2>
+
+    <h3 class="sub">Comparison on Laval Indoor and Laval Outdoor</h3>
+    <figure>
+      <img class="zoomable" src="static/images/lumen_comparison1_new.jpg" alt="Qualitative comparison on Laval Indoor and Laval Outdoor">
+      <figcaption>
+        Qualitative comparison on the Laval Indoor (left) and Laval Outdoor (right) datasets. LUMEN yields higher visual
+        fidelity and more accurate localization of light sources. Click to zoom in.
+      </figcaption>
+    </figure>
+
+    <div class="table-block">
+      <div class="table-title">Quantitative results on Laval Indoor and Laval Outdoor</div>
+      <div class="table-wrap"><table class="metrics" id="table-global"></table></div>
+      <div class="table-note">Lower is better. Best results per dataset in bold.</div>
+    </div>
+
+    <h3 class="sub">In-the-wild HDR panorama generation</h3>
+    <figure>
+      <img class="zoomable" src="static/images/inthewild.jpg" alt="HDR panorama generation from in-the-wild images">
+      <figcaption>
+        Image-conditioned HDR panorama generation on real-world captures. Each pair shows the input photo (left) and the
+        generated 360&deg; environment map (right), covering indoor and outdoor scenes.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================ Object insertion ============================ -->
+<section class="section" id="object-insertion">
+  <div class="container">
+    <h2>Virtual Object Insertion</h2>
+    <figure>
+      <img class="zoomable" src="static/images/object_insertion_comparison.jpg" alt="Object insertion comparison">
+      <figcaption>
+        Qualitative comparison of object insertion on the Laval Indoor dataset (top) and the Laval Indoor Spatially
+        Varying HDR dataset (bottom). Objects rendered with LUMEN's environment maps show more accurate color,
+        brightness and shadows. Click to zoom in.
+      </figcaption>
+    </figure>
+    <figure class="medium">
+      <img class="zoomable" src="static/images/object_insertion_lavalsv.jpg" alt="Object insertion on the Laval Indoor Spatially Varying dataset">
+      <figcaption>
+        Object insertion results on the Laval Indoor Spatially Varying dataset: original photo (left) and virtual objects
+        rendered with the spatially-varying illumination predicted by LUMEN at their locations (right).
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================ BibTeX ============================ -->
+<section class="section alt" id="bibtex">
+  <div class="container narrow">
+    <h2>BibTeX</h2>
+    <div class="bibtex">
+      <button class="copy" type="button" id="copy-bibtex">Copy</button>
+<pre id="bibtex-text">@inproceedings{lumen2026,
+  title     = {LUMEN: Geometry-Guided Diffusion Model for Spatially-Varying HDR Illumination Estimation},
+  author    = {Hongze Chen and Fangyu Lin and Runze Zhang and Lingting Zhu and Weikai Chen and Zeyu Hu and Yingda Yin and Keyang Luo and Xin Wang and Zehong Lin and Jun Zhang},
+  booktitle = {ACM SIGGRAPH Asia 2026 Conference Papers},
+  year      = {2026}
+}</pre>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container narrow">
+    <p>
+      Page design inspired by
+      <a href="https://oriontmt.github.io/Sig25-4DLighting/" target="_blank" rel="noopener">4DLighting</a>,
+      <a href="https://eyeline-labs.github.io/LiMo/" target="_blank" rel="noopener">LiMo</a> and
+      <a href="https://research.nvidia.com/labs/toronto-ai/LuxDiT/" target="_blank" rel="noopener">LuxDiT</a>.
+    </p>
+  </div>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <img id="lightbox-img" alt="">
+  <span class="lightbox-hint">Click anywhere or press Esc to close</span>
+</div>
+
+<script src="static/js/main.js"></script>
+</body>
+</html>
