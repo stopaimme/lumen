@@ -354,7 +354,7 @@ def main(args):
         
         
         # 转换 LDR 到 HDR
-        LDR_np = np.clip(LDR_np, 0.0, 0.99999)
+        LDR_np = np.clip(LDR_np, 0.0, 0.999)
         HDR_np = LDR_np / (1.0 - LDR_np)
         
         # 保存 HDR 为 EXR 格式
